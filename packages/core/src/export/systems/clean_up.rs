@@ -1,6 +1,9 @@
 use crate::export::ongoing::OngoingExport;
+use crate::prelude::DungeonRsState;
 use bevy::prelude::Projection::Orthographic;
-use bevy::prelude::{Camera, Commands, Projection, Query, ResMut, Result, Transform, With};
+use bevy::prelude::{
+    Camera, Commands, NextState, Projection, Query, ResMut, Result, Transform, With,
+};
 use bevy::render::camera::{RenderTarget, ScalingMode};
 use bevy::window::WindowRef;
 use std::ops::DerefMut;
@@ -11,6 +14,7 @@ pub fn clean_up(
     mut commands: Commands,
     mut camera: Query<(&mut Camera, &mut Transform, &mut Projection), With<Camera>>,
     ongoing_export: ResMut<OngoingExport>,
+    mut dungeonrs_state: ResMut<NextState<DungeonRsState>>,
 ) -> Result {
     commands.remove_resource::<OngoingExport>();
 
@@ -25,5 +29,6 @@ pub fn clean_up(
         projection.scaling_mode = ScalingMode::WindowSize;
     }
 
+    dungeonrs_state.set(DungeonRsState::Loaded);
     Ok(())
 }

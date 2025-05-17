@@ -5,7 +5,7 @@ use bevy::prelude::{Component, Rect, Transform, Visibility};
 /// A project is the marker component for the ECS hierarchy that contains everything you want saved
 /// when the user "saves" a map.
 ///
-/// Typically, a [Project] will contain [crate::Layer]s which in turn contain the elements that the
+/// Typically, a [Project] will contain [crate::components::Layer]s which in turn contain the elements that the
 /// user sees (images, paths, patterns, ...).
 #[derive(Component)]
 #[component(immutable)]

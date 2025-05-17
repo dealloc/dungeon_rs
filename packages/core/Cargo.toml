@@ -23,14 +23,15 @@ bevy = { workspace = true, features = [
   "bevy_window",
   "serialize"
 ] }
-semver = "1.0.26"
+semver = { version = "1.0.26", features = ["serde"] }
 
 [features]
 default = ["msgpack"]
 
 dev = [
   "bevy/trace",
-  "bevy/track_location"
+  "bevy/track_location",
+  "bevy/bevy_dev_tools",
 ]
 
 msgpack = ["dep:rmp-serde"]

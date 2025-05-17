@@ -12,19 +12,13 @@
 pub(super) mod entities;
 pub(super) mod events;
 pub(super) mod save_file;
+mod systems;
 
-use crate::components::{Layer, Level, Project, Texture};
 use crate::persistence::events::load_project_request::LoadProjectRequest;
-use crate::persistence::save_file::SaveFile;
 use crate::prelude::SaveProjectRequest;
-use crate::utils;
+use crate::states::DungeonRsState;
 use bevy::app::App;
-use bevy::asset::{AssetServer, Assets};
-use bevy::prelude::{
-    Children, ColorMaterial, Commands, Entity, EventReader, FixedPostUpdate, Mesh, Mesh2d,
-    MeshMaterial2d, Name, Plugin, Query, Res, ResMut, Result, Transform, With, info,
-};
-use std::fs::write;
+use bevy::prelude::{FixedPostUpdate, IntoScheduleConfigs, Plugin, in_state, not};
 
 #[derive(Default)]
 pub struct PersistencePlugin;
@@ -35,60 +29,8 @@ impl Plugin for PersistencePlugin {
             .add_event::<LoadProjectRequest>();
         app.add_systems(
             FixedPostUpdate,
-            (poll_save_project_events, poll_load_project_events),
+            (systems::poll_save_project, systems::poll_load_project)
+                .run_if(not(in_state(DungeonRsState::Loading))),
         );
     }
-}
-
-#[allow(clippy::too_many_arguments)]
-fn poll_save_project_events(
-    mut save_projects: EventReader<SaveProjectRequest>,
-    project_query: Query<(&Project, &Name, &Children), With<Project>>,
-    level_query: Query<(&Name, &Children), With<Level>>,
-    layer_query: Query<(&Transform, &Name, &Children), With<Layer>>,
-    mesh_query: Query<(&Texture, Option<&Name>), With<Mesh2d>>,
-    transform_query: Query<&Transform>,
-    material_query: Query<&MeshMaterial2d<ColorMaterial>>,
-    materials: Res<Assets<ColorMaterial>>,
-) -> Result {
-    for save_project in save_projects.read() {
-        let save = SaveFile::new(
-            project_query,
-            level_query,
-            layer_query,
-            mesh_query,
-            transform_query,
-            material_query,
-            &materials,
-        )?;
-
-        write(save_project.path.as_path(), utils::serialize(&save)?).expect("FAILED TO SAVE");
-
-        info!("Saved to {}", save_project.path.display());
-    }
-
-    Ok(())
-}
-
-fn poll_load_project_events(
-    mut load_projects: EventReader<LoadProjectRequest>,
-    mut commands: Commands,
-    project: Query<Entity, With<Project>>,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-    asset_server: Res<AssetServer>,
-) -> Result {
-    for load_project in load_projects.read() {
-        let content = std::fs::read(&load_project.path)?;
-        let save: SaveFile = utils::deserialize(&content)?;
-
-        if let Ok(project) = project.single() {
-            info!("Despawning existing hierarchy");
-            commands.entity(project).despawn();
-        }
-
-        save.restore(&mut commands, &mut meshes, &mut materials, &asset_server);
-    }
-
-    Ok(())
 }

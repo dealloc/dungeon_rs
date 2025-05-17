@@ -2,7 +2,16 @@
 
 use serde::Serialize;
 
-/// Serializes the given [T] using the configured serializer.
+/// Returns the current version of the package as defined in the `Cargo.toml` manifest.
+/// Since all packages in the workspace inherit their version from the root `Cargo.toml`, this method
+/// essentially returns the version from there.
+///
+/// This method is available at compile time.
+pub const fn version() -> &'static str {
+    env!("CARGO_PKG_VERSION")
+}
+
+/// Serializes the given `T` using the configured serializer.
 pub fn serialize<T>(subject: &T) -> Result<Vec<u8>, String>
 where
     T: Serialize,
@@ -14,7 +23,7 @@ where
     };
 
     #[allow(unreachable_code)]
-    #[cfg(feature = "msgpack")]
+    #[cfg(all(feature = "msgpack", not(feature = "json")))]
     return match rmp_serde::to_vec(subject) {
         Ok(result) => Ok(result),
         Err(error) => Err(error.to_string()),
@@ -41,7 +50,7 @@ where
     };
 
     #[allow(unreachable_code)]
-    #[cfg(feature = "msgpack")]
+    #[cfg(all(feature = "msgpack", not(feature = "json")))]
     return match rmp_serde::from_slice(bytes) {
         Ok(msgpack) => Ok(msgpack),
         Err(error) => return Err(error.to_string()),
