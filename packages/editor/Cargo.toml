@@ -16,6 +16,7 @@ bevy = { workspace = true, features = [
   "bevy_window",
   "bevy_winit",
   "bevy_log",
+  "bevy_gizmos",
   # image formats
   "png",
   "jpeg",

@@ -7,6 +7,7 @@ mod ui_state;
 mod widgets;
 
 use crate::ui_state::UiState;
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 use bevy::prelude::*;
 use bevy_egui::{EguiContextPass, EguiContexts, EguiPlugin};
 use bevy_inspector_egui::DefaultInspectorConfigPlugin;
@@ -22,6 +23,7 @@ impl Plugin for UIPlugin {
         app.add_plugins(EguiPlugin {
             enable_multipass_for_primary_context: true,
         })
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .add_plugins(DefaultInspectorConfigPlugin)
         .add_systems(Startup, setup)
         .add_systems(EguiContextPass, editor_layout::editor_layout)

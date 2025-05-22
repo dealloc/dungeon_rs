@@ -1,5 +1,6 @@
 use crate::UiState;
 use crate::widgets::toolbar::toolbar;
+use bevy::diagnostic::DiagnosticsStore;
 use bevy::prelude::{EventWriter, Res, With, World, warn};
 use bevy::window::PrimaryWindow;
 use bevy_egui::{EguiContext, EguiContexts};
@@ -11,6 +12,7 @@ use egui::{Direction, Layout, SidePanel, TopBottomPanel};
 #[allow(clippy::needless_pass_by_value)]
 pub fn editor_layout(
     mut contexts: EguiContexts,
+    diagnostics: Res<DiagnosticsStore>,
     ui_state: Res<UiState>,
     export_writer: EventWriter<ExportRequest>,
     save_writer: EventWriter<SaveProjectRequest>,
@@ -23,6 +25,7 @@ pub fn editor_layout(
 
     toolbar(
         context,
+        diagnostics,
         ui_state.logo,
         export_writer,
         save_writer,

@@ -1,0 +1,15 @@
+[package]
+name = "core_assets"
+edition.workspace = true
+repository.workspace = true
+version.workspace = true
+readme.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+bevy = { workspace = true, features = [] }
+tantivy = "0.24.1"
+walkdir = "2.5.0"
+rhai = { version = "1.21.0", features = [] }
+toml_edit = { version = "0.22.26", features = ["serde"] }

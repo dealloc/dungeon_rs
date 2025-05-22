@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["packages/core", "packages/editor", "packages/headless", "packages/ui"]
+members = ["packages/core", "packages/core_assets", "packages/editor", "packages/headless", "packages/ui"]
 
 [workspace.package]
 edition = "2024"
@@ -12,7 +12,6 @@ license = "MIT"
 
 [workspace.dependencies]
 bevy = { version = "0.16.0", default-features = false, features = [] }
-log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
 
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]

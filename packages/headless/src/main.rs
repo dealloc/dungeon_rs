@@ -3,25 +3,23 @@
 
 use bevy::window::ExitCondition;
 use bevy::{app::ScheduleRunnerPlugin, prelude::*};
-use core::{
-    CorePlugin,
-    prelude::{ExportCompleted, ExportProgress, ExportRequest},
-};
+use core::{CorePlugin, prelude::*};
 use std::path::PathBuf;
 use std::time::Duration;
 
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins.set(WindowPlugin {
-                primary_window: None,
-                exit_condition: ExitCondition::DontExit,
-                ..default()
-            }),
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: None,
+                    exit_condition: ExitCondition::DontExit,
+                    ..default()
+                })
+                .set(log_plugin()),
             CorePlugin,
         ))
         .add_plugins(ScheduleRunnerPlugin::run_loop(Duration::ZERO))
-        // .add_plugins(ScheduleRunnerPlugin::run_loop(Duration::from_millis(100)))
         .add_systems(Startup, setup)
         .add_systems(Update, update)
         .run();

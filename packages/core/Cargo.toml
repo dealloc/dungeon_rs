@@ -8,6 +8,7 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+core_assets = { path = "../core_assets", default-features = false, features = [] }
 crossbeam-channel = "*"
 image = { version = "*", default-features = false }
 serde = { version = "*", default-features = false }
@@ -24,6 +25,8 @@ bevy = { workspace = true, features = [
   "serialize"
 ] }
 semver = { version = "1.0.26", features = ["serde"] }
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.19", features = ["json"] }
 
 [features]
 default = ["msgpack"]

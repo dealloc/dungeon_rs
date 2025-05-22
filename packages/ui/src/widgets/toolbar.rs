@@ -1,4 +1,5 @@
-use bevy::prelude::{EventWriter, Rect};
+use bevy::diagnostic::{DiagnosticsStore, FrameTimeDiagnosticsPlugin};
+use bevy::prelude::{EventWriter, Rect, Res};
 use core::prelude::*;
 use egui::load::SizedTexture;
 use egui::{Context, TopBottomPanel};
@@ -7,6 +8,7 @@ use std::path::PathBuf;
 /// Draw the toolbar, depending on the `state` it automatically enables/disables buttons.
 pub fn toolbar(
     context: &mut Context,
+    diagnostics: Res<DiagnosticsStore>,
     logo: SizedTexture,
     mut export_writer: EventWriter<ExportRequest>,
     mut save_writer: EventWriter<SaveProjectRequest>,
@@ -61,7 +63,15 @@ pub fn toolbar(
                 }
 
                 ui.separator();
-                ui.close_menu();
+                ui.add_space(ui.available_width() - 100.0);
+
+                // algorithm taken from the official FPS code
+                if let Some(fps) = diagnostics
+                    .get(&FrameTimeDiagnosticsPlugin::FPS)
+                    .and_then(|fps| fps.smoothed())
+                {
+                    ui.label(format!("{:.0}fps", fps));
+                }
             });
         });
 }
