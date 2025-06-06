@@ -1,0 +1,23 @@
+[package]
+name = "assets"
+description = "Manages and loads asset libraries"
+edition.workspace = true
+repository.workspace = true
+version.workspace = true
+readme.workspace = true
+authors.workspace = true
+license-file.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+
+[features]
+default = []
+dev = []
+windows = []
+linux = []
+macos = []
