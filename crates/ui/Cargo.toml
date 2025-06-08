@@ -13,26 +13,32 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
+assets = { workspace = true }
 utils = { workspace = true }
 egui = { version = "0.31.1", default-features = false, features = ["mint"] }
 bevy_egui = { version = "0.34.1", default-features = false, features = ["render", "default_fonts"] }
 bevy = { workspace = true, features = ["bevy_core_pipeline", "bevy_asset", "bevy_sprite"] }
 bevy-inspector-egui = { version = "0.31.0", default-features = false, features = ["bevy_render"] }
 egui_dock = "0.16.0"
+egui_file = "0.22.1"
 
 [features]
 default = []
 dev = [
+  "assets/dev",
   "utils/dev",
   "egui/deadlock_detection",
   "egui/log"
 ]
 windows = [
+  "assets/windows",
   "utils/windows"
 ]
 linux = [
+  "assets/linux",
   "utils/linux"
 ]
 macos = [
+  "assets/macos",
   "utils/macos"
 ]

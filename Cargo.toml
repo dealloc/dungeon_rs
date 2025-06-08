@@ -32,9 +32,10 @@ module_name_repetitions = "warn"
 semicolon_if_nothing_returned = "warn"
 
 [workspace.dependencies]
-bevy = { version = "0.16.0", default-features = false, features = ["std"] }
+bevy = { version = "0.16.0", default-features = false, features = ["std", "bevy_log"] }
 anyhow = "1.0"
 thiserror = "2.0"
+image = { version = "0.25.6", default-features = false, features = ["rayon"] }
 serde = { version = "1.0", features = ["derive"] }
 
 # Workspace packages
@@ -45,6 +46,7 @@ io = { path = "crates/io" }
 serialization = { path = "crates/serialization" }
 ui = { path = "crates/ui" }
 utils = { path = "crates/utils" }
+logging = { path = "crates/logging" }
 
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]

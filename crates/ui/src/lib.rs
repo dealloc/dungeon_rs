@@ -4,5 +4,6 @@ mod camera;
 mod layout;
 mod plugin;
 mod state;
+mod widgets;
 
 pub use plugin::UIPlugin;

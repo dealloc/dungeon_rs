@@ -14,12 +14,12 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
-assets = { workspace = true }
 config = { workspace = true }
 data = { workspace = true }
 io = { workspace = true }
 ui = { workspace = true }
 utils = { workspace = true }
+logging = { workspace = true }
 bevy = { workspace = true, default-features = false, features = [
   "std",
   "bevy_window",
@@ -28,13 +28,12 @@ bevy = { workspace = true, default-features = false, features = [
 ] }
 
 [target.'cfg(windows)'.build-dependencies]
-image = { version = "0.25.6", default-features = false, features = ["png", "ico"] }
+image = { workspace = true, features = ["png", "ico"] }
 winresource = "0.1.20"
 
 [features]
 default = ["png"]
 dev = [
-  "assets/dev",
   "data/dev",
   "io/dev",
   "ui/dev",
@@ -42,7 +41,6 @@ dev = [
   "config/dev"
 ]
 windows = [
-  "assets/windows",
   "data/windows",
   "io/windows",
   "ui/windows",
@@ -50,7 +48,6 @@ windows = [
   "config/windows"
 ]
 linux = [
-  "assets/linux",
   "data/linux",
   "io/linux",
   "ui/linux",
@@ -58,7 +55,6 @@ linux = [
   "config/linux"
 ]
 macos = [
-  "assets/macos",
   "data/macos",
   "io/macos",
   "ui/macos",

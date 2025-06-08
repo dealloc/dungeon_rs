@@ -145,7 +145,10 @@ pub(crate) fn handle_async_components(
             if result.is_ok() {
                 commands.entity(entity).despawn();
             } else {
-                // TODO: handle errors in async tasks?
+                let error = result.unwrap_err();
+
+                // warn!("Background task failed: {error:?}");
+                panic!("failure");
             }
         }
     }

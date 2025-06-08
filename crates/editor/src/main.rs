@@ -3,8 +3,8 @@
 use bevy::prelude::*;
 use config::Configuration;
 use io::IOPlugin;
+use logging::log_plugin;
 use ui::UIPlugin;
-use utils::log_plugin;
 
 /// Main entry point for the editor.
 ///

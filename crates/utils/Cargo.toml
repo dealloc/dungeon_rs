@@ -14,24 +14,18 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
-config = { workspace = true }
 utils_macros = { path = "macros" }
 bevy = { workspace = true, features = ["bevy_log"] }
 crossbeam-channel = "0.5.15"
-tracing-appender = "0.2.3"
-tracing-subscriber = { version = "0.3.19", features = ["json"] }
+semver = { version = "1.0.26", features = ["serde"] }
 
 [features]
 default = []
 dev = [
-  "config/dev"
 ]
 windows = [
-  "config/windows"
 ]
 linux = [
-  "config/linux"
 ]
 macos = [
-  "config/macos"
 ]

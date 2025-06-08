@@ -1,4 +1,4 @@
-//! Contains the [`log_plugin`] that returns a configured `LogPlugin`
+#![doc = include_str!("../README.md")]
 
 use bevy::log::tracing_subscriber::Layer;
 use bevy::log::tracing_subscriber::fmt::layer;
