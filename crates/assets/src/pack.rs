@@ -4,14 +4,12 @@ use serialization::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::Path;
 use tantivy::doc;
-use tantivy::schema::{DateOptions, Schema, TEXT};
 use utils::AsyncComponent;
-use walkdir::{DirEntry, WalkDir};
 
-const META_DIR: &str = ".metadata";
-const INDEX_DIR: &str = "index";
-const SCRIPT_DIR: &str = "scripts";
-const CONFIG_FILE: &str = "config.toml";
+// const META_DIR: &str = ".metadata";
+// const INDEX_DIR: &str = "index";
+// const SCRIPT_DIR: &str = "scripts";
+// const CONFIG_FILE: &str = "config.toml";
 
 #[derive(Serialize, Deserialize)]
 pub struct AssetPack {
@@ -32,32 +30,32 @@ impl Default for AssetPack {
 
 impl AssetPack {
     #[must_use]
-    pub fn create(root: impl AsRef<Path>) -> AsyncComponent {
-        AsyncComponent::new_io(async move |queue| Ok(()))
+    pub fn create(_root: impl AsRef<Path>) -> AsyncComponent {
+        AsyncComponent::new_io(async move |_queue| Ok(()))
     }
 
-    /// Builds the Tantivy schema for the index.
-    fn schema() -> Schema {
-        let mut builder = Schema::builder();
-        builder.add_text_field("name", TEXT);
-        builder.add_date_field("last_indexed", DateOptions::default());
-
-        builder.build()
-    }
-
-    /// Create a `Walkdir` iterator that skips hidden folders and unsupported file types.
-    fn recursive_files_and_folders(
-        root: impl AsRef<Path>,
-    ) -> impl Iterator<Item = walkdir::Result<DirEntry>> {
-        let walker = WalkDir::new(root);
-
-        walker.into_iter().filter_entry(|entry| {
-            let filename = entry.file_name().to_string_lossy();
-            if entry.file_type().is_dir() && filename.starts_with('.') {
-                return false;
-            }
-
-            !filename.ends_with(".webm")
-        })
-    }
+    // /// Builds the Tantivy schema for the index.
+    // fn schema() -> Schema {
+    //     let mut builder = Schema::builder();
+    //     builder.add_text_field("name", TEXT);
+    //     builder.add_date_field("last_indexed", DateOptions::default());
+    //
+    //     builder.build()
+    // }
+    //
+    // /// Create a `Walkdir` iterator that skips hidden folders and unsupported file types.
+    // fn recursive_files_and_folders(
+    //     root: impl AsRef<Path>,
+    // ) -> impl Iterator<Item = walkdir::Result<DirEntry>> {
+    //     let walker = WalkDir::new(root);
+    //
+    //     walker.into_iter().filter_entry(|entry| {
+    //         let filename = entry.file_name().to_string_lossy();
+    //         if entry.file_type().is_dir() && filename.starts_with('.') {
+    //             return false;
+    //         }
+    //
+    //         !filename.ends_with(".webm")
+    //     })
+    // }
 }

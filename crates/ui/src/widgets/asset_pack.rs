@@ -1,6 +1,5 @@
 use bevy::prelude::Component;
 use egui::Ui;
-use std::path::PathBuf;
 
 /// This tracks all data and state related to the creation of a new [`assets::AssetPack`].
 ///
@@ -8,9 +7,12 @@ use std::path::PathBuf;
 #[derive(Component)]
 pub struct AssetPackBuilder {
     pub name: String,
-    pub path: PathBuf,
+    pub path: String,
 }
 
+/// Displays an instance of an [`AssetPackBuilder`] in the given `Ui`.
+///
+/// This method should be called for each builder, each frame.
 pub fn show_asset_pack_builder(builder: &mut AssetPackBuilder, ui: &mut Ui) {
     ui.horizontal(|ui| {
         ui.label("Name: ");
@@ -18,7 +20,7 @@ pub fn show_asset_pack_builder(builder: &mut AssetPackBuilder, ui: &mut Ui) {
     });
     ui.horizontal(|ui| {
         ui.label("Path: ");
-        ui.text_edit_singleline(&mut String::new());
+        ui.text_edit_singleline(&mut builder.path);
         if ui.button("...").clicked() {
             // let mut file_dialog = FileDialog::select_folder(None);
             // file_dialog.open();

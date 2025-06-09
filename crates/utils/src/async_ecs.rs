@@ -4,7 +4,7 @@
 //! and automatically executes commands emitted on the world the component is attached to.
 
 use bevy::ecs::world::CommandQueue;
-use bevy::prelude::{BevyError, Commands, Component, Entity, Event, Query, World};
+use bevy::prelude::{BevyError, Commands, Component, Entity, Event, Query, World, warn};
 use bevy::tasks::futures_lite::future;
 use bevy::tasks::{AsyncComputeTaskPool, ComputeTaskPool, IoTaskPool, Task, block_on};
 pub use crossbeam_channel::{Receiver, Sender};
@@ -147,8 +147,7 @@ pub(crate) fn handle_async_components(
             } else {
                 let error = result.unwrap_err();
 
-                // warn!("Background task failed: {error:?}");
-                panic!("failure");
+                warn!("Background task failed: {error:?}");
             }
         }
     }

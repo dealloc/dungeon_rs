@@ -3,7 +3,7 @@
 use crate::LogConfiguration;
 use anyhow::Context;
 use bevy::prelude::Resource;
-use semver::{BuildMetadata, Prerelease, Version};
+use semver::Version;
 use serialization::{Deserialize, SerializationFormat, Serialize, deserialize, serialize_to};
 use std::collections::HashMap;
 use std::env::current_exe;
