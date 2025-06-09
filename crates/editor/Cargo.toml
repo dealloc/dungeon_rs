@@ -24,7 +24,8 @@ bevy = { workspace = true, default-features = false, features = [
   "std",
   "bevy_window",
   "bevy_winit",
-  "bevy_asset"
+  "bevy_asset",
+  "bevy_gizmos"
 ] }
 
 [target.'cfg(windows)'.build-dependencies]

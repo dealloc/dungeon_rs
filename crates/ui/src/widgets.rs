@@ -4,17 +4,23 @@
 //! Smaller widgets are in the top level module, larger widgets (that require external state, ...)
 //! are kept in submodules.
 
+mod asset_pack;
+
 use crate::layout::EditorLayout;
 use crate::state::UiState;
-use bevy::prelude::{Mut, World};
+use bevy::prelude::{Mut, ResMut, Transform};
 use egui::{Context, TopBottomPanel};
 use egui_dock::{DockArea, Style};
 
 /// Render the docking layout containing the inspector and the main panels.
-pub fn dock_layout(world: &mut World, context: &mut Context, mut state: Mut<UiState>) {
+pub fn dock_layout<'a>(
+    context: &mut Context,
+    mut state: &mut ResMut<UiState>,
+    entity: &'a mut Mut<'a, Transform>,
+) {
     // construct an `EditorLayout` using our mutable world reference for rendering.
     // the `EditorLayout` struct has a strict lifetime bound to this scope and may not leak.
-    let mut viewer = EditorLayout { world };
+    let mut viewer = EditorLayout { entity };
 
     // render the `dock_state` in the `UiState` in a DockArea.
     DockArea::new(&mut state.dock_state)

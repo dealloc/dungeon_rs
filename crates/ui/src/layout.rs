@@ -10,21 +10,11 @@ mod levels;
 
 use crate::state::UiState;
 use crate::widgets;
-use bevy::prelude::{With, World};
-use bevy::window::PrimaryWindow;
-use bevy::{
-    ecs::error::BevyError,
-    prelude::{Commands, ResMut, info},
-};
-use bevy_egui::{EguiContext, EguiContexts};
-use egui::panel::Side;
-use egui::{
-    Color32, Frame, ProgressBar, Rect, ScrollArea, Separator, SidePanel, Stroke, TextEdit,
-    TopBottomPanel, Ui, Widget, WidgetText, Window,
-};
-use egui_dock::{DockArea, Style, TabViewer};
-use egui_file::FileDialog;
-use utils::AsyncComponent;
+use bevy::prelude::{Mut, Query, Sprite, Transform, With};
+use bevy::{ecs::error::BevyError, prelude::ResMut};
+use bevy_egui::EguiContexts;
+use egui::{Ui, Widget, WidgetText};
+use egui_dock::TabViewer;
 
 /// The different panels that can be shown in the editor UI.
 /// If a new panel needs to be available for the user in the UI it needs to be added here,
@@ -46,7 +36,7 @@ pub enum EditorPanels {
 /// Contains the data structures that are available to the [`TabViewer`] when rendering the editor layout.
 /// See [`EditorLayout::ui`] in particular.
 pub struct EditorLayout<'a> {
-    pub world: &'a mut World,
+    pub(crate) entity: &'a mut Mut<'a, Transform>,
 }
 
 impl TabViewer for EditorLayout<'_> {
@@ -87,47 +77,19 @@ impl TabViewer for EditorLayout<'_> {
     }
 }
 
-/// Handles rendering the [`EditorLayout`] in the `World`.
 #[utils::bevy_system]
-pub fn render_editor_layout(world: &mut World) {
-    let Ok(mut context) = world
-        .query_filtered::<&mut EguiContext, With<PrimaryWindow>>()
-        .single(world)
-    else {
-        return;
+pub fn render_editor_layout(
+    mut contexts: EguiContexts,
+    mut state: ResMut<UiState>,
+    mut query: Query<&mut Transform, With<Sprite>>,
+) -> Result<(), BevyError> {
+    let Some(context) = contexts.try_ctx_mut() else {
+        return Ok(());
     };
 
-    let mut context = context.clone();
-    world.resource_scope::<UiState, _>(|world, mut state| {
-        let context = context.get_mut();
-        if let Some(dialog) = &mut state.open_asset_folder {
-            dialog.show(context);
+    let mut transform = query.single_mut()?;
 
-            if dialog.selected() {
-                info!("{:?}", dialog.path());
-            }
-        }
-
-        widgets::toolbar(context);
-        widgets::dock_layout(world, context, state);
-    });
-
-    // Window::new("Create asset library")
-    //     .open(&mut true)
-    //     .show(context, |ui| {
-    //         ui.horizontal(|ui| {
-    //             ui.label("Name: ");
-    //             ui.text_edit_singleline(&mut String::new());
-    //         });
-    //         ui.horizontal(|ui| {
-    //             ui.label("Path: ");
-    //             ui.text_edit_singleline(&mut String::new());
-    //             if ui.button("...").clicked() {
-    //                 let mut file_dialog = FileDialog::select_folder(None);
-    //                 file_dialog.open();
-    //
-    //                 state.open_asset_folder = Some(file_dialog);
-    //             }
-    //         });
-    //     });
+    widgets::toolbar(context);
+    widgets::dock_layout(context, &mut state, &mut transform);
+    Ok(())
 }
