@@ -10,9 +10,11 @@ mod levels;
 
 use crate::state::UiState;
 use crate::widgets;
-use bevy::{ecs::error::BevyError, prelude::ResMut};
+use crate::widgets::{AssetPackBuilder, show_asset_pack_builder};
+use bevy::prelude::ResMut;
+use bevy::prelude::{Commands, Query};
 use bevy_egui::EguiContexts;
-use egui::{Ui, WidgetText};
+use egui::{Ui, WidgetText, Window};
 use egui_dock::TabViewer;
 
 /// The different panels that can be shown in the editor UI.
@@ -34,9 +36,12 @@ pub enum EditorPanels {
 
 /// Contains the data structures that are available to the [`TabViewer`] when rendering the editor layout.
 /// See [`EditorLayout::ui`] in particular.
-pub struct EditorLayout {}
+pub struct EditorLayout<'a> {
+    /// Handle to Bevy’s `Commands` for this frame.
+    pub commands: Commands<'a, 'a>,
+}
 
-impl TabViewer for EditorLayout {
+impl TabViewer for EditorLayout<'_> {
     type Tab = EditorPanels;
 
     fn title(&mut self, tab: &mut Self::Tab) -> WidgetText {
@@ -81,12 +86,19 @@ impl TabViewer for EditorLayout {
 pub fn render_editor_layout(
     mut contexts: EguiContexts,
     mut state: ResMut<UiState>,
-) -> Result<(), BevyError> {
+    commands: Commands,
+    mut pack_builders: Query<&mut AssetPackBuilder>,
+) {
     let Some(context) = contexts.try_ctx_mut() else {
-        return Ok(());
+        return;
     };
 
     widgets::toolbar(context);
-    widgets::dock_layout(context, &mut state);
-    Ok(())
+    widgets::dock_layout(context, &mut state, commands);
+
+    for pack_builder in &mut pack_builders {
+        Window::new(pack_builder.name.clone()).show(context, |ui| {
+            show_asset_pack_builder(pack_builder, ui);
+        });
+    }
 }

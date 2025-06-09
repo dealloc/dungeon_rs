@@ -8,15 +8,17 @@ mod asset_pack;
 
 use crate::layout::EditorLayout;
 use crate::state::UiState;
-use bevy::prelude::ResMut;
+use bevy::prelude::{Commands, ResMut};
 use egui::{Context, TopBottomPanel};
 use egui_dock::{DockArea, Style};
 
+pub use asset_pack::*;
+
 /// Render the docking layout containing the inspector and the main panels.
-pub fn dock_layout(context: &mut Context, state: &mut ResMut<UiState>) {
+pub fn dock_layout(context: &mut Context, state: &mut ResMut<UiState>, commands: Commands) {
     // construct an `EditorLayout` using our mutable world reference for rendering.
     // the `EditorLayout` struct has a strict lifetime bound to this scope and may not leak.
-    let mut viewer = EditorLayout {};
+    let mut viewer = EditorLayout { commands };
 
     // render the `dock_state` in the `UiState` in a DockArea.
     DockArea::new(&mut state.dock_state)
